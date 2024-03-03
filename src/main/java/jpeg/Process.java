@@ -125,7 +125,6 @@ public class Process {
         modifiedY = originalY.copy();
         modifiedCb = originalCb.copy();
         modifiedCr = originalCr.copy();
-
     }
     public void convertToRGB(){
         int [][][] res = ColorTransform.convertModifiedYcBcRtoRGB(originalY, originalCb, originalCr);
