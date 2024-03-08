@@ -4,6 +4,7 @@ import core.FileBindings;
 import core.Helper;
 import enums.SamplingType;
 import enums.TransformType;
+import enums.QualityType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,10 +20,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
     public MenuItem closeButton;
+    public Button countPsnrButt;
+    public ComboBox psnrComboBox;
+    public TextField mseTextField;
+    public TextField maeTextField;
+    public TextField psnrTextField;
+    public TextField saeTextField;
     @FXML
     Button rgbButt;
 
@@ -86,16 +94,19 @@ public class MainWindowController implements Initializable {
     private Button yButtModified;
 
     private Process process;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Nastaveni vsech hodnot do combo boxu
         sampling.getItems().setAll(SamplingType.values());
         transformType.getItems().setAll(TransformType.values());
+        psnrComboBox.getItems().setAll(QualityType.values());
 
         // Nastaveni vychozich hodnot
         sampling.getSelectionModel().select(SamplingType.S_4_4_4);
         transformType.getSelectionModel().select(TransformType.DCT);
         quantizeQuality.setValue(50);
+        psnrComboBox.getSelectionModel().select(QualityType.RGB);
 
         //Vytvoren listu moznosti, ktere budou uvnitr spinneru
         ObservableList<Integer> blocks = FXCollections.observableArrayList(2, 4, 8, 16, 32, 64, 128, 256, 512);
@@ -169,6 +180,7 @@ public class MainWindowController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
     public void sample() {
         try {
             process.downSample(sampling.getValue());
@@ -199,7 +211,16 @@ public class MainWindowController implements Initializable {
     }
 
     public void countQuality() {
+        try {
+            process.qualityCount((QualityType) psnrComboBox.getValue());
+            psnrTextField.setText(String.valueOf(process.qualityCount((QualityType) psnrComboBox.getValue())[0]));
+            mseTextField.setText(String.valueOf(process.qualityCount((QualityType) psnrComboBox.getValue())[1]));
+            maeTextField.setText(String.valueOf(process.qualityCount((QualityType) psnrComboBox.getValue())[2]));
+            saeTextField.setText(String.valueOf(process.qualityCount((QualityType) psnrComboBox.getValue())[3]));
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void showBlueModified() {

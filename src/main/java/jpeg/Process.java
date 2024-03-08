@@ -2,13 +2,14 @@ package jpeg;
 
 import Jama.Matrix;
 import enums.ColorType;
+import enums.QualityType;
 import enums.SamplingType;
 import graphics.Dialogs;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 
+import static core.Helper.checkValue;
 import static enums.ColorType.*;
 
 
@@ -72,7 +73,7 @@ public class Process {
 
     public BufferedImage showOneColorImageFromRGB(int [][] color, ColorType type) {
         BufferedImage bfImage = new BufferedImage(
-                imageWidth, imageHeight,
+                color.length, color[0].length,
                 BufferedImage.TYPE_INT_RGB);
 
         for (int h = 0; h < imageHeight; h++) {
@@ -104,13 +105,8 @@ public class Process {
 
         for (int h = 0; h < imageHeight; h++) {
             for (int w = 0; w < imageWidth; w++) {
-                // Zaokrouhlení a oříznutí hodnot mimo rozsah 0-255
-//                int grey = (int) Math.min(Math.max(color.get(h, w), 0), 255);
-                // Vložení hodnoty do všech barevných složek pro získání šedého obrázku
-                bfImage.setRGB(w, h,
-                        (new Color((int)color.get(h,w),
-                                (int)color.get(h,w),
-                                (int)color.get(h,w))).getRGB());
+                int pixel = checkValue(color.get(h, w)); // Používá metodu z třídy Helper, která zajistí, že hodnota bude v rozsahu 0-255.
+                bfImage.setRGB(w, h, (new Color(pixel, pixel, pixel)).getRGB());
             }
         }
         return bfImage;
@@ -188,6 +184,87 @@ public class Process {
     public void upSample(SamplingType samplingType) {
         modifiedCb = Sampling.sampleUp(modifiedCb, samplingType);
         modifiedCr = Sampling.sampleUp(modifiedCr, samplingType);
+    }
+
+
+    public double[] qualityCount(QualityType qualityType) {
+        double psnrVal = 0;
+        double mse = 0;
+        double mae = 0;
+        double sae = 0;
+        double[] vals = new double[4];
+        switch (qualityType) {
+            case RED:
+                mse = Quality.countMSE(convertIntToDouble(originalRed), convertIntToDouble(modifiedRed));
+                mae = Quality.countMSE(convertIntToDouble(originalRed), convertIntToDouble(modifiedRed));
+                sae = Quality.countSAE(convertIntToDouble(originalRed), convertIntToDouble(modifiedRed));
+                psnrVal = Quality.countPSNR(mse);
+                break;
+
+            case GREEN:
+                mse = Quality.countMSE(convertIntToDouble(originalGreen), convertIntToDouble(modifiedGreen));
+                mae = Quality.countMSE(convertIntToDouble(originalGreen), convertIntToDouble(modifiedGreen));
+                sae = Quality.countSAE(convertIntToDouble(originalGreen), convertIntToDouble(modifiedGreen));
+                psnrVal = Quality.countPSNR(mse);
+                break;
+
+            case BLUE:
+                mse = Quality.countMSE(convertIntToDouble(originalBlue), convertIntToDouble(modifiedBlue));
+                mae = Quality.countMSE(convertIntToDouble(originalBlue), convertIntToDouble(modifiedBlue));
+                sae = Quality.countSAE(convertIntToDouble(originalBlue), convertIntToDouble(modifiedBlue));
+                psnrVal = Quality.countPSNR(mse);
+                break;
+
+            case Y:
+                mse = Quality.countMSE(originalY.getArray(), modifiedY.getArray());
+                mae = Quality.countMAE(originalY.getArray(), modifiedY.getArray());
+                sae = Quality.countSAE(originalY.getArray(), modifiedY.getArray());
+                psnrVal = Quality.countPSNR(mse);
+                break;
+
+            case Cb:
+                mse = Quality.countMSE(originalCb.getArray(), modifiedCb.getArray());
+                mae = Quality.countMAE(originalCb.getArray(), modifiedCb.getArray());
+                sae = Quality.countSAE(originalCb.getArray(), modifiedCb.getArray());
+                psnrVal = Quality.countPSNR(mse);
+                break;
+
+            case Cr:
+                mse = Quality.countMSE(originalCr.getArray(), modifiedCr.getArray());
+                mae = Quality.countMAE(originalCr.getArray(), modifiedCr.getArray());
+                sae = Quality.countSAE(originalCr.getArray(), modifiedCr.getArray());
+                psnrVal = Quality.countPSNR(mse);
+                break;
+
+            case RGB:
+                double mseRedRGB = Quality.countMSE(convertIntToDouble(originalRed), convertIntToDouble(modifiedRed));
+                double mseGreenRGB = Quality.countMSE(convertIntToDouble(originalGreen), convertIntToDouble(modifiedGreen));
+                double mseBlueRGB = Quality.countMSE(convertIntToDouble(originalBlue), convertIntToDouble(modifiedBlue));
+                psnrVal = Quality.countPSNRforRGB(mseRedRGB, mseGreenRGB, mseBlueRGB);
+                break;
+
+            case YcBcR:
+                double mseYc = Quality.countMSE(originalY.getArray(), modifiedY.getArray());
+                double mseCbC = Quality.countMSE(originalCb.getArray(), modifiedCb.getArray());
+                double mseCrC = Quality.countMSE(originalCr.getArray(), modifiedCr.getArray());
+                psnrVal = Quality.countPSNRforRGB(mseYc, mseCbC, mseCrC);
+                break;
+        }
+        vals[0] = psnrVal;
+        vals[1] = mse;
+        vals[2] = mae;
+        vals[3] = sae;
+        return vals;
+    }
+
+    public static double[][] convertIntToDouble(int[][] intArray) {
+        double[][] doubleArray = new double[intArray.length][intArray[0].length];
+        for (int i = 0; i < intArray.length; i++) {
+            for (int j = 0; j < intArray[0].length; j++) {
+                doubleArray[i][j] = (double) intArray[i][j];
+            }
+        }
+        return doubleArray;
     }
 }
 
