@@ -187,31 +187,31 @@ public class Process {
     }
 
 
-    public double[] qualityCount(QualityType qualityType) {
+    public double[] qualityCount(QualityType qualityType) throws Exception {
+        double[] values = new double[4];
         double psnrVal = 0;
         double mse = 0;
         double mae = 0;
         double sae = 0;
-        double[] vals = new double[4];
         switch (qualityType) {
             case RED:
-                mse = Quality.countMSE(convertIntToDouble(originalRed), convertIntToDouble(modifiedRed));
-                mae = Quality.countMSE(convertIntToDouble(originalRed), convertIntToDouble(modifiedRed));
-                sae = Quality.countSAE(convertIntToDouble(originalRed), convertIntToDouble(modifiedRed));
+                mse = Quality.countMSE(Quality.convertIntToDouble(originalRed), Quality.convertIntToDouble(modifiedRed));
+                mae = Quality.countMSE(Quality.convertIntToDouble(originalRed), Quality.convertIntToDouble(modifiedRed));
+                sae = Quality.countSAE(Quality.convertIntToDouble(originalRed), Quality.convertIntToDouble(modifiedRed));
                 psnrVal = Quality.countPSNR(mse);
                 break;
 
             case GREEN:
-                mse = Quality.countMSE(convertIntToDouble(originalGreen), convertIntToDouble(modifiedGreen));
-                mae = Quality.countMSE(convertIntToDouble(originalGreen), convertIntToDouble(modifiedGreen));
-                sae = Quality.countSAE(convertIntToDouble(originalGreen), convertIntToDouble(modifiedGreen));
+                mse = Quality.countMSE(Quality.convertIntToDouble(originalGreen), Quality.convertIntToDouble(modifiedGreen));
+                mae = Quality.countMSE(Quality.convertIntToDouble(originalGreen), Quality.convertIntToDouble(modifiedGreen));
+                sae = Quality.countSAE(Quality.convertIntToDouble(originalGreen), Quality.convertIntToDouble(modifiedGreen));
                 psnrVal = Quality.countPSNR(mse);
                 break;
 
             case BLUE:
-                mse = Quality.countMSE(convertIntToDouble(originalBlue), convertIntToDouble(modifiedBlue));
-                mae = Quality.countMSE(convertIntToDouble(originalBlue), convertIntToDouble(modifiedBlue));
-                sae = Quality.countSAE(convertIntToDouble(originalBlue), convertIntToDouble(modifiedBlue));
+                mse = Quality.countMSE(Quality.convertIntToDouble(originalBlue), Quality.convertIntToDouble(modifiedBlue));
+                mae = Quality.countMSE(Quality.convertIntToDouble(originalBlue), Quality.convertIntToDouble(modifiedBlue));
+                sae = Quality.countSAE(Quality.convertIntToDouble(originalBlue), Quality.convertIntToDouble(modifiedBlue));
                 psnrVal = Quality.countPSNR(mse);
                 break;
 
@@ -237,34 +237,49 @@ public class Process {
                 break;
 
             case RGB:
-                double mseRedRGB = Quality.countMSE(convertIntToDouble(originalRed), convertIntToDouble(modifiedRed));
-                double mseGreenRGB = Quality.countMSE(convertIntToDouble(originalGreen), convertIntToDouble(modifiedGreen));
-                double mseBlueRGB = Quality.countMSE(convertIntToDouble(originalBlue), convertIntToDouble(modifiedBlue));
+                double mseRedRGB = Quality.countMSE(Quality.convertIntToDouble(originalRed), Quality.convertIntToDouble(modifiedRed));
+                double mseGreenRGB = Quality.countMSE(Quality.convertIntToDouble(originalGreen), Quality.convertIntToDouble(modifiedGreen));
+                double mseBlueRGB = Quality.countMSE(Quality.convertIntToDouble(originalBlue), Quality.convertIntToDouble(modifiedBlue));
+
+                double maeRedRGB = Quality.countMAE(Quality.convertIntToDouble(originalRed), Quality.convertIntToDouble(modifiedRed));
+                double maeGreenRGB = Quality.countMAE(Quality.convertIntToDouble(originalGreen), Quality.convertIntToDouble(modifiedGreen));
+                double maeBlueRGB = Quality.countMAE(Quality.convertIntToDouble(originalBlue), Quality.convertIntToDouble(modifiedBlue));
+
+                double saeRedRGB = Quality.countSAE(Quality.convertIntToDouble(originalRed), Quality.convertIntToDouble(modifiedRed));
+                double saeGreenRGB = Quality.countSAE(Quality.convertIntToDouble(originalGreen), Quality.convertIntToDouble(modifiedGreen));
+                double saeBlueRGB = Quality.countSAE(Quality.convertIntToDouble(originalBlue), Quality.convertIntToDouble(modifiedBlue));
+
+                mse = (mseRedRGB +  mseGreenRGB + mseBlueRGB) / 3;
+                mae = (maeRedRGB + maeGreenRGB + maeBlueRGB) / 3;
+                sae = (saeRedRGB + saeGreenRGB + saeBlueRGB) / 3;
+
                 psnrVal = Quality.countPSNRforRGB(mseRedRGB, mseGreenRGB, mseBlueRGB);
                 break;
 
             case YcBcR:
-                double mseYc = Quality.countMSE(originalY.getArray(), modifiedY.getArray());
-                double mseCbC = Quality.countMSE(originalCb.getArray(), modifiedCb.getArray());
-                double mseCrC = Quality.countMSE(originalCr.getArray(), modifiedCr.getArray());
-                psnrVal = Quality.countPSNRforRGB(mseYc, mseCbC, mseCrC);
+                double mseY = Quality.countMSE(originalY.getArray(), modifiedY.getArray());
+                double mseCb = Quality.countMSE(originalCb.getArray(), modifiedCb.getArray());
+                double mseCr = Quality.countMSE(originalCr.getArray(), modifiedCr.getArray());
+
+                double maeY = Quality.countMAE(originalY.getArray(), modifiedY.getArray());
+                double maeCb = Quality.countMAE(originalCb.getArray(), modifiedCb.getArray());
+                double maeCr = Quality.countMAE(originalCr.getArray(), modifiedCr.getArray());
+
+                double saeY = Quality.countSAE(originalY.getArray(), modifiedY.getArray());
+                double saeCb = Quality.countSAE(originalCb.getArray(), modifiedCb.getArray());
+                double saeCr = Quality.countSAE(originalCr.getArray(), modifiedCr.getArray());
+
+                mse = (mseY +  mseCb + mseCr) / 3;
+                mae = (maeY + maeCb + maeCr) / 3;
+                sae = (saeY + saeCb + saeCr) / 3;
+                psnrVal = Quality.countPSNR(mse);
                 break;
         }
-        vals[0] = psnrVal;
-        vals[1] = mse;
-        vals[2] = mae;
-        vals[3] = sae;
-        return vals;
-    }
-
-    public static double[][] convertIntToDouble(int[][] intArray) {
-        double[][] doubleArray = new double[intArray.length][intArray[0].length];
-        for (int i = 0; i < intArray.length; i++) {
-            for (int j = 0; j < intArray[0].length; j++) {
-                doubleArray[i][j] = (double) intArray[i][j];
-            }
-        }
-        return doubleArray;
+        values[0] = psnrVal;
+        values[1] = mse;
+        values[2] = mae;
+        values[3] = sae;
+        return values;
     }
 }
 

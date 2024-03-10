@@ -1,12 +1,18 @@
 package enums;
 
 public enum QualityType {
-    RED,
-    GREEN,
-    BLUE,
-    Y,
-    Cb,
-    Cr,
-    RGB,
-    YcBcR
+    RED("Red"),
+    GREEN("Green"),
+    BLUE("Blue"),
+    Y("Y"),
+    Cb("Cb"),
+    Cr("Cr"),
+    RGB("RGB"),
+    YcBcR("YCbCr");
+
+    String quality;
+
+    QualityType(String quality) {
+        this.quality = quality;
+    }
 }

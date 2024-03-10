@@ -1,5 +1,13 @@
 package enums;
 
 public enum ColorType {
-    RED, GREEN, BLUE
+    RED("Red"),
+    GREEN("Green"),
+    BLUE("Blue");
+
+    String color;
+
+    ColorType(String color) {
+        this.color = color;
+    }
 }

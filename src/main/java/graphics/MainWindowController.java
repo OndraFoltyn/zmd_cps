@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 public class MainWindowController implements Initializable {
     public MenuItem closeButton;
     public Button countPsnrButt;
-    public ComboBox psnrComboBox;
+    public ComboBox<QualityType> psnrComboBox;
     public TextField mseTextField;
     public TextField maeTextField;
     public TextField psnrTextField;
@@ -212,11 +212,18 @@ public class MainWindowController implements Initializable {
 
     public void countQuality() {
         try {
-            process.qualityCount((QualityType) psnrComboBox.getValue());
-            psnrTextField.setText(String.valueOf(process.qualityCount((QualityType) psnrComboBox.getValue())[0]));
-            mseTextField.setText(String.valueOf(process.qualityCount((QualityType) psnrComboBox.getValue())[1]));
-            maeTextField.setText(String.valueOf(process.qualityCount((QualityType) psnrComboBox.getValue())[2]));
-            saeTextField.setText(String.valueOf(process.qualityCount((QualityType) psnrComboBox.getValue())[3]));
+            double[] qualityValue = process.qualityCount(psnrComboBox.getValue());
+
+            double scale = Math.pow(10, 4);
+            qualityValue[0] = Math.round(qualityValue[0] * scale) / scale;
+            qualityValue[1] = Math.round(qualityValue[1] * scale) / scale;
+            qualityValue[2] = Math.round(qualityValue[2] * scale) / scale;
+            qualityValue[3] = Math.round(qualityValue[3] * scale) / scale;
+
+            psnrTextField.setText(String.valueOf(qualityValue[0]));
+            mseTextField.setText(String.valueOf(qualityValue[1]));
+            maeTextField.setText(String.valueOf(qualityValue[2]));
+            saeTextField.setText(String.valueOf(qualityValue[3]));
 
         } catch (Exception e) {
             throw new RuntimeException(e);
