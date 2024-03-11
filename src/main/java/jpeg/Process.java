@@ -4,6 +4,7 @@ import Jama.Matrix;
 import enums.ColorType;
 import enums.QualityType;
 import enums.SamplingType;
+import enums.YCbCrType;
 import graphics.Dialogs;
 
 import java.awt.*;
@@ -186,6 +187,25 @@ public class Process {
         modifiedCr = Sampling.sampleUp(modifiedCr, samplingType);
     }
 
+    public double[] ssimCount(YCbCrType ycbcrType) throws Exception {
+        double[] values = new double[2];
+        double ssim = 0;
+        double mssim = 0;
+        switch (ycbcrType) {
+            case Y:
+                ssim = Quality.countSSIM(originalY, modifiedY);
+                mssim = Quality.countMSSIM(originalY, modifiedY);
+            case Cb:
+                ssim = Quality.countSSIM(originalCb, modifiedCb);
+                mssim = Quality.countMSSIM(originalCb, modifiedCb);
+            case Cr:
+                ssim = Quality.countSSIM(originalCr, modifiedCr);
+                mssim = Quality.countMSSIM(originalCr, modifiedCr);
+        }
+        values[0] = ssim;
+        values[1] = mssim;
+        return values;
+    }
 
     public double[] qualityCount(QualityType qualityType) throws Exception {
         double[] values = new double[4];

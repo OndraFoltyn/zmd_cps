@@ -61,7 +61,6 @@ public class Quality {
         int L = 255;
         double C1 = Math.pow(K1*L, 2);
         double C2 = Math.pow(K2*L, 2);
-        double ssim = 0;
         double u_x = 0;
         double u_y = 0;
         double sigma_x = 0;
@@ -98,33 +97,28 @@ public class Quality {
         double numerator = (2 * u_x * u_y + C1) * (2 * sigma_xy + C2);
         double denominator = (Math.pow(u_x,2) + Math.pow(u_y,2) + C1) * (Math.pow(sigma_x,2) + Math.pow(sigma_y,2) + C2);
 
-        ssim = numerator/denominator;
-
-        return ssim;
+        return numerator/denominator;
     }
 
     // Výpočet MSSIM, ponechte zde throw, pokud to nebudete implementovat
     public static double countMSSIM(Matrix original, Matrix modified) {
 //        throw new RuntimeException("Not implemented yet.");
-        int M = original.getColumnDimension() * original.getRowDimension();
-        double totalSSIM = 0;
+        double ssim = 0;
+        double M = original.getColumnDimension() * original.getRowDimension();
 
         for (int i = 0; i < original.getRowDimension(); i++) {
             for (int j = 0; j < original.getColumnDimension(); j++) {
-                Matrix subOriginal = original.getMatrix(i, i, j, j);
-                Matrix subModified = modified.getMatrix(i, i, j, j);
-                double ssim = countSSIM(subOriginal, subModified);
-                totalSSIM += ssim;
+                ssim += countSSIM(original.getMatrix(i,i,j,j), modified.getMatrix(i,i,j,j));
             }
         }
-        return totalSSIM / M;
+        return ssim / M;
     }
 
     public static double[][] convertIntToDouble(int[][] intArray) {
         double[][] doubleArray = new double[intArray.length][intArray[0].length];
         for (int i = 0; i < intArray.length; i++) {
             for (int j = 0; j < intArray[0].length; j++) {
-                doubleArray[i][j] = (double) intArray[i][j];
+                doubleArray[i][j] = intArray[i][j];
             }
         }
         return doubleArray;

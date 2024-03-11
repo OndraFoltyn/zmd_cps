@@ -5,6 +5,7 @@ import core.Helper;
 import enums.SamplingType;
 import enums.TransformType;
 import enums.QualityType;
+import enums.YCbCrType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,10 +28,14 @@ public class MainWindowController implements Initializable {
     public MenuItem closeButton;
     public Button countPsnrButt;
     public ComboBox<QualityType> psnrComboBox;
+    public ComboBox<YCbCrType> ssimComboBox;
     public TextField mseTextField;
     public TextField maeTextField;
     public TextField psnrTextField;
     public TextField saeTextField;
+    public Button countSsimButton;
+    public TextField ssimTextField;
+    public TextField mssimTextField;
     @FXML
     Button rgbButt;
 
@@ -101,12 +106,14 @@ public class MainWindowController implements Initializable {
         sampling.getItems().setAll(SamplingType.values());
         transformType.getItems().setAll(TransformType.values());
         psnrComboBox.getItems().setAll(QualityType.values());
+        ssimComboBox.getItems().setAll(YCbCrType.values());
 
         // Nastaveni vychozich hodnot
         sampling.getSelectionModel().select(SamplingType.S_4_4_4);
         transformType.getSelectionModel().select(TransformType.DCT);
         quantizeQuality.setValue(50);
         psnrComboBox.getSelectionModel().select(QualityType.RGB);
+        ssimComboBox.getSelectionModel().select(YCbCrType.Y);
 
         //Vytvoren listu moznosti, ktere budou uvnitr spinneru
         ObservableList<Integer> blocks = FXCollections.observableArrayList(2, 4, 8, 16, 32, 64, 128, 256, 512);
@@ -230,6 +237,18 @@ public class MainWindowController implements Initializable {
         }
     }
 
+    public void countSsim(ActionEvent actionEvent) {
+        try {
+            double[] qualityValue = process.ssimCount(ssimComboBox.getValue());
+            ssimTextField.setText(String.valueOf(qualityValue[0]));
+            mssimTextField.setText(String.valueOf(qualityValue[1]));
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void showBlueModified() {
         try {
             Dialogs.showImageInWindow(process.showModBlue(), "Modified Blue", true);
@@ -324,4 +343,6 @@ public class MainWindowController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+
 }
