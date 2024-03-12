@@ -195,12 +195,15 @@ public class Process {
             case Y:
                 ssim = Quality.countSSIM(originalY, modifiedY);
                 mssim = Quality.countMSSIM(originalY, modifiedY);
+                break;
             case Cb:
                 ssim = Quality.countSSIM(originalCb, modifiedCb);
                 mssim = Quality.countMSSIM(originalCb, modifiedCb);
+                break;
             case Cr:
                 ssim = Quality.countSSIM(originalCr, modifiedCr);
                 mssim = Quality.countMSSIM(originalCr, modifiedCr);
+                break;
         }
         values[0] = ssim;
         values[1] = mssim;

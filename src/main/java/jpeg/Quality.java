@@ -102,13 +102,15 @@ public class Quality {
 
     // Výpočet MSSIM, ponechte zde throw, pokud to nebudete implementovat
     public static double countMSSIM(Matrix original, Matrix modified) {
-//        throw new RuntimeException("Not implemented yet.");
         double ssim = 0;
-        double M = original.getColumnDimension() * original.getRowDimension();
+        int patchSize = 8;
+        int M = 0;
 
-        for (int i = 0; i < original.getRowDimension(); i++) {
-            for (int j = 0; j < original.getColumnDimension(); j++) {
-                ssim += countSSIM(original.getMatrix(i,i,j,j), modified.getMatrix(i,i,j,j));
+        for (int i = 0; i < original.getRowDimension() - patchSize + 1; i += patchSize) {
+            for (int j = 0; j < original.getColumnDimension() - patchSize + 1; j += patchSize) {
+                ssim += countSSIM(original.getMatrix(i, i+patchSize-1, j, j+patchSize-1),
+                                  modified.getMatrix(i, i+patchSize-1, j, j+patchSize-1));
+                M++;
             }
         }
         return ssim / M;

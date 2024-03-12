@@ -242,8 +242,6 @@ public class MainWindowController implements Initializable {
             double[] qualityValue = process.ssimCount(ssimComboBox.getValue());
             ssimTextField.setText(String.valueOf(qualityValue[0]));
             mssimTextField.setText(String.valueOf(qualityValue[1]));
-
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
