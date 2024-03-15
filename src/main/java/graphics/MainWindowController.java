@@ -130,6 +130,7 @@ public class MainWindowController implements Initializable {
 
         process = new Process(FileBindings.defaultImage);
     }
+
     public void close() {
         Stage stage = ((Stage) buttonSample.getScene().getWindow());
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
@@ -170,6 +171,7 @@ public class MainWindowController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
     public void convertToRGB() {
         try {
             process.convertToRGB();
@@ -195,6 +197,7 @@ public class MainWindowController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
     public void inverseSample() {
         try {
             process.upSample(sampling.getValue());
@@ -202,9 +205,11 @@ public class MainWindowController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
     public void transform() {
 
     }
+
     public void inverseTransform() {
 
     }
@@ -276,7 +281,8 @@ public class MainWindowController implements Initializable {
             Dialogs.showImageInWindow(process.showCb(), "Original Cb", true);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }    }
+        }
+    }
 
     public void showCrModified() {
         try {

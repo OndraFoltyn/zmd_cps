@@ -20,9 +20,9 @@ public class Process {
     private int imageWidth;
 
 
-    private int [][] originalRed, modifiedRed;
-    private int [][] originalGreen, modifiedGreen;
-    private int [][] originalBlue, modifiedBlue;
+    private int[][] originalRed, modifiedRed;
+    private int[][] originalGreen, modifiedGreen;
+    private int[][] originalBlue, modifiedBlue;
 
     private Matrix originalY, modifiedY;
     private Matrix originalCb, modifiedCb;
@@ -63,16 +63,16 @@ public class Process {
                 BufferedImage.TYPE_INT_RGB);
         for (int h = 0; h < imageHeight; h++) {
             for (int w = 0; w < imageWidth; w++) {
-                bfImage.setRGB(w,h,
+                bfImage.setRGB(w, h,
                         (new Color(modifiedRed[h][w],
-                                   modifiedGreen[h][w],
-                                   modifiedBlue[h][w])).getRGB());
+                                modifiedGreen[h][w],
+                                modifiedBlue[h][w])).getRGB());
             }
         }
         return bfImage;
     }
 
-    public BufferedImage showOneColorImageFromRGB(int [][] color, ColorType type) {
+    public BufferedImage showOneColorImageFromRGB(int[][] color, ColorType type) {
         BufferedImage bfImage = new BufferedImage(
                 color.length, color[0].length,
                 BufferedImage.TYPE_INT_RGB);
@@ -88,11 +88,11 @@ public class Process {
                         rgbValue = new Color(0, 0, color[h][w]).getRGB();
                         break;
                     case GREEN:
-                        rgbValue = new Color(0,color[h][w], 0).getRGB();
+                        rgbValue = new Color(0, color[h][w], 0).getRGB();
                         break;
                     default:
                         rgbValue = new Color(color[h][w], color[h][w], color[h][w]).getRGB();
-                    }
+                }
                 bfImage.setRGB(w, h, rgbValue);
             }
         }
@@ -113,7 +113,7 @@ public class Process {
         return bfImage;
     }
 
-    public void convertToYCbCr(){
+    public void convertToYCbCr() {
         Matrix[] res = ColorTransform.convertOriginalRGBtoYcBcR(originalRed, originalGreen, originalBlue);
         originalY = res[0];
         originalCb = res[1];
@@ -123,8 +123,9 @@ public class Process {
         modifiedCb = originalCb.copy();
         modifiedCr = originalCr.copy();
     }
-    public void convertToRGB(){
-        int [][][] res = ColorTransform.convertModifiedYcBcRtoRGB(originalY, originalCb, originalCr);
+
+    public void convertToRGB() {
+        int[][][] res = ColorTransform.convertModifiedYcBcRtoRGB(originalY, originalCb, originalCr);
         modifiedRed = res[0];
         modifiedGreen = res[1];
         modifiedBlue = res[2];
@@ -133,6 +134,7 @@ public class Process {
     public BufferedImage showRed() {
         return showOneColorImageFromRGB(originalRed, RED);
     }
+
     public BufferedImage showGreen() {
         return showOneColorImageFromRGB(originalGreen, GREEN);
     }
@@ -272,7 +274,7 @@ public class Process {
                 double saeGreenRGB = Quality.countSAE(Quality.convertIntToDouble(originalGreen), Quality.convertIntToDouble(modifiedGreen));
                 double saeBlueRGB = Quality.countSAE(Quality.convertIntToDouble(originalBlue), Quality.convertIntToDouble(modifiedBlue));
 
-                mse = (mseRedRGB +  mseGreenRGB + mseBlueRGB) / 3;
+                mse = (mseRedRGB + mseGreenRGB + mseBlueRGB) / 3;
                 mae = (maeRedRGB + maeGreenRGB + maeBlueRGB) / 3;
                 sae = (saeRedRGB + saeGreenRGB + saeBlueRGB) / 3;
 
@@ -292,7 +294,7 @@ public class Process {
                 double saeCb = Quality.countSAE(originalCb.getArray(), modifiedCb.getArray());
                 double saeCr = Quality.countSAE(originalCr.getArray(), modifiedCr.getArray());
 
-                mse = (mseY +  mseCb + mseCr) / 3;
+                mse = (mseY + mseCb + mseCr) / 3;
                 mae = (maeY + maeCb + maeCr) / 3;
                 sae = (saeY + saeCb + saeCr) / 3;
                 psnrVal = Quality.countPSNR(mse);
