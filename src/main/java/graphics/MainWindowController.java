@@ -207,11 +207,11 @@ public class MainWindowController implements Initializable {
     }
 
     public void transform() {
-
+        process.transform(transformType.getValue(), transformBlock.getValue());
     }
 
     public void inverseTransform() {
-
+        process.iTransform(transformType.getValue(), transformBlock.getValue());
     }
 
     public void quantize() {

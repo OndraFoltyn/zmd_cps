@@ -12,14 +12,12 @@ public class Transform {
 
         for (int i = 0; i < input.getRowDimension(); i += blockSize) {
             for (int j = 0; j < input.getColumnDimension(); j += blockSize) {
-
                 Matrix X = input.getMatrix(i, i + blockSize - 1, j, j + blockSize - 1);
                 Matrix mat = A.times(X).times(aTranspose);
                 output.setMatrix(i, i + blockSize - 1, j, j + blockSize - 1, mat);
 
             }
         }
-
         return output;
     }
 
@@ -31,14 +29,11 @@ public class Transform {
 
         for (int i = 0; i < input.getRowDimension(); i += blockSize) {
             for (int j = 0; j < input.getColumnDimension(); j += blockSize) {
-
                 Matrix O = input.getMatrix(i, i + blockSize - 1, j, j + blockSize - 1);
                 Matrix mat = aTranspose.times(O).times(A);
                 output.setMatrix(i, i + blockSize - 1, j, j + blockSize - 1, mat);
-
             }
         }
-
         return output;
     }
 
@@ -59,7 +54,6 @@ public class Transform {
                         transformMatrix.set(i, j, C);
                     }
                 }
-//                printMatrix(transformMatrix);
                 break;
 
             case WHT:
@@ -88,16 +82,5 @@ public class Transform {
             }
         }
         return hadamard;
-    }
-
-    public static void printMatrix(Matrix matrix) {
-        int m = matrix.getRowDimension();
-        int n = matrix.getColumnDimension();
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                System.out.print(matrix.get(i, j) + " ");
-            }
-            System.out.println();
-        }
     }
 }

@@ -1,10 +1,7 @@
 package jpeg;
 
 import Jama.Matrix;
-import enums.ColorType;
-import enums.QualityType;
-import enums.SamplingType;
-import enums.YCbCrType;
+import enums.*;
 import graphics.Dialogs;
 
 import java.awt.*;
@@ -305,6 +302,19 @@ public class Process {
         values[2] = mae;
         values[3] = sae;
         return values;
+    }
+
+    public void transform (TransformType transformType, int blockSize) {
+        modifiedY = Transform.transform(modifiedY, transformType, blockSize);
+        modifiedCb = Transform.transform(modifiedCb, transformType, blockSize);
+        modifiedCr = Transform.transform(modifiedCr, transformType, blockSize);
+    }
+
+
+    public void iTransform (TransformType transformType, int blockSize) {
+        modifiedY = Transform.inverseTransform(modifiedY, transformType, blockSize);
+        modifiedCb = Transform.inverseTransform(modifiedCb, transformType, blockSize);
+        modifiedCr = Transform.inverseTransform(modifiedCr, transformType, blockSize);
     }
 }
 
