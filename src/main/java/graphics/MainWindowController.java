@@ -215,11 +215,11 @@ public class MainWindowController implements Initializable {
     }
 
     public void quantize() {
-
+        process.quantize(transformBlock.getValue(), quantizeQuality.getValue(), false);
     }
 
     public void inverseQuantize() {
-
+        process.iQuantize(transformBlock.getValue(), quantizeQuality.getValue(), true);
     }
 
     public void countQuality() {

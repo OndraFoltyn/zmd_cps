@@ -124,7 +124,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefWidth="150.0" text="Quantize" GridPane.rowIndex="4">
+                  <Button fx:id="buttonQuantize" mnemonicParsing="false" onAction="#quantize" prefWidth="150.0" text="Quantize" GridPane.rowIndex="4">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
@@ -187,7 +187,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="buttonInverseQuantize" mnemonicParsing="false" prefWidth="150.0" text="IQuantize" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                  <Button fx:id="buttonInverseQuantize" mnemonicParsing="false" onAction="#inverseQuantize" prefWidth="150.0" text="IQuantize" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>

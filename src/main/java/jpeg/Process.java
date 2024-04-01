@@ -316,6 +316,18 @@ public class Process {
         modifiedCb = Transform.inverseTransform(modifiedCb, transformType, blockSize);
         modifiedCr = Transform.inverseTransform(modifiedCr, transformType, blockSize);
     }
+
+    public void quantize (int blockSize, double quality, boolean matrixY) {
+        modifiedY = Quantization.quantize(modifiedY, blockSize, quality, true);
+        modifiedCb = Quantization.quantize(modifiedCb, blockSize, quality, false);
+        modifiedCr = Quantization.quantize(modifiedCr, blockSize, quality, false);
+    }
+
+    public void iQuantize (int blockSize, double quality, boolean matrixY) {
+        modifiedY = Quantization.inverseQuantize(modifiedY, blockSize, quality, true);
+        modifiedCb = Quantization.inverseQuantize(modifiedCb, blockSize, quality, false);
+        modifiedCr = Quantization.inverseQuantize(modifiedCr, blockSize, quality, false);
+    }
 }
 
 
